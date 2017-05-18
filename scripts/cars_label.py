@@ -1,16 +1,26 @@
 import xml.etree.ElementTree as ET
 import pickle
 import os
-from os import listdir, getcwd
 from os.path import join
 from PIL import Image
 import glob
 
-data_folder = 'data/cars/'
-sets=[(data_folder + 'set1/', data_folder + 'set1_gt/', 'train_1'), (data_folder + 'set2/', data_folder + 'set2_gt/', 'train_2'), (data_folder + 'set3/', data_folder + 'set3_gt/', 'val')]
+workspace = os.getcwd() + '/'
+data_folder = workspace + 'data/cars/'
+trainset = open(data_folder + 'trainset.txt').readlines()
+validset = open(data_folder + 'validset.txt').readlines()
+sets = []
+for idx, subset in enumerate(trainset):
+    subsetid = subset.strip()
+    sets.append([data_folder + subsetid + '/', data_folder + subsetid + '_gt/', 'train_' + str(idx)])
+for idx, subset in enumerate(validset):
+    subsetid = subset.strip()
+    sets.append([data_folder + subsetid + '/', data_folder + subsetid + '_gt/', 'valid_' + str(idx)])
+nameset = open(data_folder + 'cars.names').readlines()
+classes = [x.strip() for x in nameset]
 
-classes = ['car']
-
+print(sets)
+print(classes)
 
 def convert(size, box):
     dw = 1./(size[0])
@@ -48,7 +58,7 @@ def get_images(path):
     return images
 
 for image_path, label_path, image_set in sets:
-    image_ids = map(lambda x: x.replace('.jpg', ''), get_images(image_path))
+    image_ids = get_images(image_path)
     list_file = open(data_folder + image_set + '.txt', 'w')
     total = 0
     for image_id in image_ids:
@@ -59,4 +69,14 @@ for image_path, label_path, image_set in sets:
     list_file.close()
     print(total)
 
-os.system("cat %s/train_1.txt %s/train_2.txt > %s/train.txt" % (data_folder, data_folder, data_folder))
+command = 'cat '
+for idx, subset in enumerate(trainset):
+    command = command + data_folder + 'train_' + str(idx) + '.txt '
+command = command + '> ' + data_folder + 'train.txt'
+os.system(command)
+
+command = 'cat '
+for idx, subset in enumerate(validset):
+    command = command + data_folder + 'valid_' + str(idx) + '.txt '
+command = command + '> ' + data_folder + 'valid.txt'
+os.system(command)
