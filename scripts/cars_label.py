@@ -6,10 +6,8 @@ from os.path import join
 from PIL import Image
 import glob
 
-# workspace = '/home/pdl/workspace1/qz/darknet-cars/'
-workspace = ''
-data_folder = workspace + 'data/cars/'
-sets=[(data_folder + 'day_normal_1610_01_5000/', data_folder + 'day_normal_1610_01_5000_gt/', 'train_1'), (data_folder + 'day_normal_1610_04_4973/', data_folder + 'day_normal_1610_04_4973_gt/', 'train_2'), (data_folder + 'day_normal_1610_07_4985/', data_folder + 'day_normal_1610_07_4985_gt/', 'val')]
+data_folder = 'data/cars/'
+sets=[(data_folder + 'set1/', data_folder + 'set1_gt/', 'train_1'), (data_folder + 'set2/', data_folder + 'set2_gt/', 'train_2'), (data_folder + 'set3/', data_folder + 'set3_gt/', 'val')]
 
 classes = ['car']
 

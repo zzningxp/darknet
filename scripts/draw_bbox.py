@@ -5,9 +5,9 @@ import numpy as np
 
 workspace = os.getcwd() + '/'
 data_folder = 'data/cars/'
-image_path = 'day_normal_1610_07_4985'
-label_path = 'day_normal_1610_07_4985_gt'
-out_path = 'day_normal_1610_07_4985_fig_0.5_1'
+image_path = 'set3'
+label_path = 'set3_gt'
+out_path = 'target'
 yolo_results = 'results/tiny_yolo_car.txt'
 acf_results = 'results/acf_car.txt'
 
@@ -48,10 +48,6 @@ white = (255, 255, 255)
 image_sets = glob.glob(workspace + data_folder + image_path + '/*.jpg')
 for idx, image_name in enumerate(image_sets):
     image_id = image_name.strip().split('/')[-1].replace('.jpg', '')
-    # if (image_id != '2015_0117_185211_016.MOV_0115'):
-        # continue
-    if (image_id != '2015_0118_053652_010.MOV_0030' and image_id != '2015_0208_142524_049.MOV_0025'):
-        continue
     image = cv2.imread(image_name.strip())
 
     label_name = workspace + data_folder + label_path + '/' + image_id + '.txt'
@@ -67,7 +63,7 @@ for idx, image_name in enumerate(image_sets):
                 ymin = int(splitline[3])
                 xmax = int(splitline[2]) + int(splitline[4])
                 ymax = int(splitline[3]) + int(splitline[5])
-                image = cv2.rectangle(image, (xmin, ymin), (xmax, ymax), green, thickness=2)
+                image = cv2.rectangle(image, (xmin, ymin), (xmax, ymax), green, thickness=1)
 
     if image_id not in yolo_recs:
         print('%s: no detection from yolo.' % image_id)
@@ -79,10 +75,9 @@ for idx, image_name in enumerate(image_sets):
                 ymin = int(rect['bbox'][1])
                 xmax = int(rect['bbox'][2])
                 ymax = int(rect['bbox'][3])
-                image = cv2.rectangle(image, (xmin, ymin), (xmax, ymax), red, thickness=2)
-                draw_label(image, '%.0f%%'%(rect['score']*100), red, white, xmin, ymin)
+                image = cv2.rectangle(image, (xmin, ymin), (xmax, ymax), red, thickness=1)
+                # draw_label(image, '%.0f%%'%(rect['score']*100), red, white, xmin, ymin)
 
-    '''
     if image_id not in acf_recs:
         print('%s: no detection from acf.' % image_id)
     else:
@@ -92,8 +87,7 @@ for idx, image_name in enumerate(image_sets):
             ymin = int(rect['bbox'][1])
             xmax = int(rect['bbox'][2])
             ymax = int(rect['bbox'][3])
-            image = cv2.rectangle(image, (xmin, ymin), (xmax, ymax), blue, thickness=2)
-    '''
+            image = cv2.rectangle(image, (xmin, ymin), (xmax, ymax), blue, thickness=1)
 
     cv2.imwrite(workspace + data_folder + out_path + '/' + image_id + '.jpg', image)
     print("%d / %d completed." % (idx + 1, len(image_sets)))
