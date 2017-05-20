@@ -139,14 +139,16 @@ char *find_char_arg(int argc, char **argv, char *arg, char *def)
 char *basecfg(char *cfgfile)
 {
     char *c = cfgfile;
-    char *next;
+    char *next, *last;
     while((next = strchr(c, '/')))
     {
         c = next+1;
     }
     c = copy_string(c);
-    next = strchr(c, '.');
-    if (next) *next = 0;
+    for (next = strchr(c, '.'), last = 0; next; last = next, next = strchr(next + 1, '.'));
+    if (last) *last= 0;
+    /*next = strchr(c, '.');*/
+    /*if (next) *next= 0;*/
     return c;
 }
 

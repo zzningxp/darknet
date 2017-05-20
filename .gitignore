@@ -6,7 +6,8 @@
 *.jpg
 old/
 mnist/
-data/
+data/voc/
+data/cars/
 caffe/
 grasp/
 images/
@@ -14,7 +15,6 @@ opencv/
 convnet/
 decaf/
 submission/
-cfg/
 darknet
 .fuse*
 
