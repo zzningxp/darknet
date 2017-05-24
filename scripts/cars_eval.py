@@ -38,7 +38,7 @@ def voc_ap(rec, prec, use_07_metric=False):
         ap = np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])
     return ap
 
-def evaluate(class_recs, npos, results, ovthresh=0.5, use_07_metric=False):
+def evaluate(class_recs, npos, results, ovthresh=0.5, cfthresh=0.25, use_07_metric=False):
     # split results
     splitlines = [x.strip().split(' ') for x in results]
     image_ids = [x[0] for x in splitlines]
@@ -49,9 +49,9 @@ def evaluate(class_recs, npos, results, ovthresh=0.5, use_07_metric=False):
     sorted_ind = np.argsort(-confidence)
     sorted_scores = np.sort(-confidence)
     BB = BB[sorted_ind, :]
-    # image_ids = [image_ids[x] for x in sorted_ind if confidence[x] > 0.5]
-    image_ids = [image_ids[x] for x in sorted_ind]
-    print("# detection: %d" % len(image_ids))
+    image_ids = [image_ids[x] for x in sorted_ind if confidence[x] > cfthresh]
+    # image_ids = [image_ids[x] for x in sorted_ind]
+    print("confidence: %.2f, #detection: %d" % (cfthresh, len(image_ids)))
 
     # go down dets and mark TPs and FPs
     nd = len(image_ids)
@@ -161,6 +161,7 @@ if __name__ == "__main__":
         print("Max Recall: %f" % np.max(rec))
         print("Max Precision: %f" % np.max(prec))
         print("AP@%s: %f" % (classname, ap))
+        print("%s pics: %d,  gt_bbox: %d, det_bbox: %d" % (classname, len(class_recs), npos, len(results)))
         # plt.plot(rec, prec, 'b')
         # plt.xlim(0, 1)
         # plt.ylim(0, 1)
